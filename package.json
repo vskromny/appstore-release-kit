@@ -1,0 +1,28 @@
+{
+  "name": "appstore-release-kit",
+  "version": "0.1.0",
+  "description": "Zero-dependency App Store Connect release scripts for indie iOS developers: wait for a build, attach it to a version and read it back, upload subscription review screenshots and App Review attachments.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "wait-for-build": "bin/wait-for-build.mjs",
+    "attach-build": "bin/attach-build.mjs",
+    "subscription-screenshot": "bin/subscription-screenshot.mjs",
+    "review-attachment": "bin/review-attachment.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md"
+  ],
+  "keywords": [
+    "app-store-connect",
+    "ios",
+    "release",
+    "testflight",
+    "storekit"
+  ]
+}
