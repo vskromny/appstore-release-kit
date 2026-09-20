@@ -81,6 +81,74 @@ you just set may still not be there — the API is eventually consistent, and so
 what came back with what was asked for. If they differ, the command exits non-zero and says
 what it saw.
 
+## If you landed here from an error message
+
+Every line below is an error App Store Connect actually returned, with what it meant in our
+case. They are verbatim so that searching for one finds this page.
+
+### `409 This resource cannot be reviewed, please check associated errors to see why`
+
+On an `appStoreVersion`, this usually does **not** mean metadata is missing. It means the
+version is still a member of an existing review submission — after a rejection it stays in the
+rejected one (`state: UNRESOLVED_ISSUES`), and every way out answers 409:
+
+| What you try | What comes back |
+|---|---|
+| `POST /v1/reviewSubmissionItems` — version into a **new** submission | `409 This resource cannot be reviewed` |
+| `POST /v1/reviewSubmissionItems` — into the **old** submission | `409 reviewSubmission state does not allow adding more items` |
+| `PATCH /v1/reviewSubmissions/{old}` `{"submitted": true}` | the same 409 |
+| `PATCH /v1/reviewSubmissions/{new}` `{"canceled": true}` | `409 Resource is not in cancellable state` |
+
+What clears it: **attach a new build to the version.** That flips it out of `REJECTED` into
+`PREPARE_FOR_SUBMISSION`, and an **Update Review** button appears on the version page in the web
+UI, which resubmits the same submission with the new build. We could not find an API path for
+that last press — as far as we can tell it is web-only.
+
+Before you go hunting through metadata, check the cheap things the API *does* expose:
+`usesIdfa` unanswered, `contentRightsDeclaration` null, no `appPriceSchedule`, a missing
+`appStoreReviewDetail`. Ours were all fine; the submission membership was the cause.
+
+### `409 reviewSubmission state does not allow adding more items`
+
+The submission is closed to changes. Note that `reviewSubmissions` has **no DELETE**, and
+`canceled: true` only works on one that was actually submitted — so an empty container created
+while experimenting cannot be removed through the API at all. Ours are still there. Create one
+only when you already know the item will go in.
+
+### `409 There can be max of 1 attachment, please delete the existing attachment before loading a new one`
+
+App Review takes exactly one attachment per review detail. Composite several screenshots into a
+single image. `review-attachment delete <id>` removes the old one first.
+
+### The build uploaded, TestFlight shows nothing
+
+Three separate things have to happen after an upload and each fails silently on its own:
+export compliance must be answered (`wait-for-build`), the build must be added to the beta group
+if that group has `hasAccessToAllBuilds = false` (`add-to-beta-group`), and the build must be
+attached to the version record (`attach-build`). Uploading does none of them.
+
+### The version is submitting the wrong binary
+
+Uploading a build does not put it on a version — the version keeps whatever build was attached
+last. Run `attach-build <versionId>` with no build number: it prints the build the version
+carries right now. Ours said 30 while builds 31–36 had all uploaded "successfully".
+
+### `GET /v1/builds/{id}/betaGroups` → 403 `does not allow 'GET_RELATED'`
+
+Read membership from the group side instead: `GET /v1/betaGroups/{id}/builds`.
+
+### `SKTestSession` returns `notEntitled` for everything
+
+StoreKit testing is broken on the iOS 26.5 simulator runtime — the catalogue loads partially and
+the paywall renders empty with no error at the call site. 26.2 works.
+
+### `xcodebuild` builds fail but `xcodebuild -version` prints fine
+
+`-version` does not require an accepted licence. Probe with `xcodebuild -list -project X.xcodeproj`
+instead. And after a major Xcode upgrade, check `xcrun simctl list runtimes` — the system
+CoreSimulator can be older than the one the new Xcode needs, which kills simulator builds while
+device builds keep working.
+
 ## License
 
 MIT.
