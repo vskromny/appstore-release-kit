@@ -6,7 +6,11 @@
 <title>appstore-release-kit — App Store Connect release scripts, API key only, zero dependencies</title>
 <meta name="description" content="Zero-dependency Node scripts for App Store Connect: wait for a build, attach it to a version and read it back, upload the subscription review screenshot, attach evidence to App Review. Plus a playbook of what Apple's docs do not say.">
 <script>
-  // Purchase links. Replace "#" with the checkout URLs; nothing else on the page needs editing.
+  // Lemon Squeezy will not serve a checkout until the store passes its KYC/KYB review:
+  // until then both links below answer 404 and the store root answers 403. Flip STORE_LIVE
+  // to true once a checkout actually loads — verified by opening it, not by an HTTP status,
+  // because the dead link answers 302 before it answers 404.
+  const STORE_LIVE = false;
   const BUY_KIT_URL = "https://appligent.lemonsqueezy.com/checkout/buy/dc62d1f9-7eac-458a-a713-f9152511cc5d";
   const BUY_REVIEW_URL = "https://appligent.lemonsqueezy.com/checkout/buy/c3183e82-d841-4a5a-8b4c-6bdc532f9495";
 </script>
@@ -130,10 +134,11 @@ environment. Run any command without arguments for usage. Full README on
 
 </main>
 <script>
-  // Until the checkout links exist, the buttons fall back to email so nobody hits a dead "#".
+  // While the store is not live the buttons fall back to email, so a reader who wants to pay
+  // reaches a person instead of a 404.
   function wire(id, url, subject) {
     const a = document.getElementById(id);
-    if (url && url !== "#") { a.href = url; return; }
+    if (STORE_LIVE && url && url !== "#") { a.href = url; return; }
     a.href = "mailto:v.skromny@gmail.com?subject=" + encodeURIComponent(subject);
     a.textContent = a.textContent.replace("Buy", "Email to buy");
   }
