@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>appstore-release-kit — App Store Connect release scripts, API key only, zero dependencies</title>
+<meta name="description" content="Zero-dependency Node scripts for App Store Connect: wait for a build, attach it to a version and read it back, upload the subscription review screenshot, attach evidence to App Review. Plus a playbook of what Apple's docs do not say.">
+<script>
+  // Purchase links. Replace "#" with the checkout URLs; nothing else on the page needs editing.
+  const BUY_KIT_URL = "#";
+  const BUY_REVIEW_URL = "#";
+</script>
+<style>
+  :root {
+    --fg: #1a1a1a; --muted: #5c5c5c; --bg: #ffffff; --line: #e3e3e3;
+    --code-bg: #f4f4f4; --accent: #0a5cc2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --fg: #ececec; --muted: #a3a3a3; --bg: #121212; --line: #2c2c2c; --code-bg: #1e1e1e; --accent: #6aa9ff; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  main { max-width: 42rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+  h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .5rem; }
+  h2 { font-size: 1.2rem; margin: 2.5rem 0 .75rem; }
+  h3 { font-size: 1.05rem; margin: 0 0 .25rem; }
+  p { margin: 0 0 1rem; }
+  .lead { color: var(--muted); font-size: 1.05rem; }
+  a { color: var(--accent); }
+  code, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92em; }
+  code { background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+  pre { background: var(--code-bg); padding: .75rem 1rem; border-radius: 4px; overflow-x: auto; margin: 0 0 1rem; }
+  pre code { background: none; padding: 0; }
+  dl { margin: 0 0 1rem; }
+  dt { margin-top: 1rem; }
+  dd { margin: .25rem 0 0; color: var(--muted); }
+  .offers { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 1rem; }
+  @media (min-width: 600px) { .offers { grid-template-columns: 1fr 1fr; } }
+  .offer { border: 1px solid var(--line); border-radius: 6px; padding: 1.25rem; display: flex; flex-direction: column; }
+  .offer p { flex: 1; }
+  .price { font-size: 1.5rem; font-weight: 600; margin: 0 0 .75rem; }
+  .buy {
+    display: inline-block; text-align: center; text-decoration: none; font-weight: 600;
+    background: var(--accent); color: #fff; padding: .7rem 1rem; border-radius: 5px; margin-top: .5rem;
+  }
+  .buy:hover { opacity: .9; }
+  .note { color: var(--muted); font-size: .9rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+  ul { padding-left: 1.25rem; }
+  li { margin-bottom: .35rem; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>appstore-release-kit</h1>
+<p class="lead">Release scripts for App Store Connect. Node ≥ 20, one API key, zero dependencies.
+Every write is read back from the API before the command reports success, because a <code>2xx</code>
+from App Store Connect is not the same as the change having taken.</p>
+
+<h2>Why this exists</h2>
+<p>A 1.0 sat on build 30 for three weeks while builds 31 through 36 came and went, each one
+"uploaded successfully" — uploading a build does not put it on the version, and neither
+<code>xcodebuild -exportArchive</code> nor Transporter tells you that. The build that finally went
+to review was rejected under 3.1.2 because two links on the paywall "did nothing"; the
+resubmission carried a capture taken right after tapping each link, with Safari open and
+"◀ App" in the status bar, and passed. The scripts are what came out of those two weeks, extracted
+from two apps in production. Everything here has shipped a real build.</p>
+
+<h2>Four commands</h2>
+<dl>
+  <dt><code>npx -p appstore-release-kit wait-for-build &lt;appId&gt; &lt;build&gt;</code></dt>
+  <dd>Polls until the build leaves <code>PROCESSING</code>, answers export compliance, reads the flag back.
+  If the build goes <code>INVALID</code>, this is where the reason shows up.</dd>
+
+  <dt><code>npx -p appstore-release-kit attach-build &lt;versionId&gt; [build]</code></dt>
+  <dd>Attaches a <code>VALID</code> build to a version record and reads the relationship back. With no build
+  number it just prints which build the version carries right now — the cheap pre-submission check.
+  Never submits.</dd>
+
+  <dt><code>npx -p appstore-release-kit subscription-screenshot state|upload &lt;groupId&gt; [png]</code></dt>
+  <dd>The review screenshot every subscription needs before it leaves <code>MISSING_METADATA</code>.
+  It is in the API, despite the folklore. <code>state</code> prints what App Store Connect itself says is missing.</dd>
+
+  <dt><code>npx -p appstore-release-kit review-attachment state|upload|delete &lt;reviewDetailId&gt; [file]</code></dt>
+  <dd>Attaches a file to App Review, next to the review notes. Notes are text only; proof that a control
+  works goes here. One attachment per review — composite several captures into one image.</dd>
+</dl>
+<p class="note">Setup: an App Store Connect API key (role App Manager) in
+<code>~/.appstoreconnect/private_keys/</code>, plus <code>ASC_KEY_ID</code> and <code>ASC_ISSUER_ID</code> in the
+environment. Run any command without arguments for usage. Full README on
+<a href="https://github.com/vskromny/appstore-release-kit">GitHub</a>.</p>
+
+<h2>Two things you can pay for</h2>
+<div class="offers">
+
+  <div class="offer">
+    <h3>Kit + Playbook</h3>
+    <p class="price">$9</p>
+    <p>The scripts are free — MIT, on <a href="https://github.com/vskromny/appstore-release-kit">GitHub</a>.
+    The $9 is for the playbook, <em>What Apple didn't write</em> (PDF): sixteen things that cost real
+    release days, each as symptom → cause → fix → how to verify it took. The version that silently kept the
+    old build. The beta group that hides <code>VALID</code> builds. The subscription screenshot that "isn't in
+    the API". Resubmission after a rejection being web-only. The iOS 26.5 simulator that breaks StoreKit
+    testing. <code>xcodebuild -version</code> passing without an accepted licence. And one emailed answer
+    to one question about your release.</p>
+    <a class="buy" id="buy-kit" href="#">Buy for $9</a>
+  </div>
+
+  <div class="offer">
+    <h3>Rejection second opinion</h3>
+    <p class="price">$19</p>
+    <p>Send the rejection text and a link to your app. Within 24 hours you get a written breakdown: which
+    guideline was actually violated, what to fix in the binary, what to fix in the metadata, and what to
+    write back to the reviewer. Same procedure that turned a 3.1.2 rejection into an approved
+    resubmission — including the evidence attachment that goes with it.</p>
+    <a class="buy" id="buy-review" href="#">Buy for $19</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>Appligent AI, Zürich · <a href="https://github.com/vskromny/appstore-release-kit">github.com/vskromny/appstore-release-kit</a> · MIT</p>
+</footer>
+
+</main>
+<script>
+  // Until the checkout links exist, the buttons fall back to email so nobody hits a dead "#".
+  function wire(id, url, subject) {
+    const a = document.getElementById(id);
+    if (url && url !== "#") { a.href = url; return; }
+    a.href = "mailto:v.skromny@gmail.com?subject=" + encodeURIComponent(subject);
+    a.textContent = a.textContent.replace("Buy", "Email to buy");
+  }
+  wire("buy-kit", BUY_KIT_URL, "appstore-release-kit: Kit + Playbook ($9)");
+  wire("buy-review", BUY_REVIEW_URL, "appstore-release-kit: Rejection second opinion ($19)");
+</script>
+</body>
+</html>
