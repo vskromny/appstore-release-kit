@@ -99,26 +99,27 @@ environment. Run any command without arguments for usage. Full README on
 <div class="offers">
 
   <div class="offer">
-    <h3>Kit + Playbook</h3>
-    <p class="price">CHF&nbsp;20</p>
-    <p>The scripts are free — MIT, on <a href="https://github.com/vskromny/appstore-release-kit">GitHub</a>.
-    The CHF 20 is for the playbook, <em>What Apple didn't write</em> (PDF): sixteen things that cost real
-    release days, each as symptom → cause → fix → how to verify it took. The version that silently kept the
-    old build. The beta group that hides <code>VALID</code> builds. The subscription screenshot that "isn't in
-    the API". Resubmission after a rejection being web-only. The iOS 26.5 simulator that breaks StoreKit
-    testing. <code>xcodebuild -version</code> passing without an accepted licence. And one emailed answer
-    to one question about your release.</p>
-    <a class="buy" id="buy-kit" href="#">Buy for CHF&nbsp;20</a>
+    <h3>Rejection second opinion</h3>
+    <p class="price">CHF&nbsp;29</p>
+    <p>Send the rejection text and a link to your app. Within 24 hours you get a written breakdown: which
+    guideline was actually violated, what to fix in the binary, what to fix in the metadata, what evidence
+    to attach, and what to write back to the reviewer. Same procedure that turned a 3.1.2 rejection into an
+    approved resubmission — including the evidence attachment that went with it. One app, one rejection,
+    one written answer, and follow-up questions on that answer are included.</p>
+    <a class="buy" id="buy-review" href="#">Buy for CHF&nbsp;29</a>
   </div>
 
   <div class="offer">
-    <h3>Rejection second opinion</h3>
-    <p class="price">CHF&nbsp;10</p>
-    <p>Send the rejection text and a link to your app. Within 24 hours you get a written breakdown: which
-    guideline was actually violated, what to fix in the binary, what to fix in the metadata, and what to
-    write back to the reviewer. Same procedure that turned a 3.1.2 rejection into an approved
-    resubmission — including the evidence attachment that goes with it.</p>
-    <a class="buy" id="buy-review" href="#">Buy for CHF&nbsp;10</a>
+    <h3>The playbook</h3>
+    <p class="price">CHF&nbsp;5</p>
+    <p><em>What Apple didn't write</em> (PDF, 9 pages): sixteen things that cost real release days, each as
+    symptom → cause → fix → how to verify it took. The version that silently kept the old build. The beta
+    group that hides <code>VALID</code> builds. The subscription screenshot that "isn't in the API".
+    Resubmission after a rejection being web-only. The iOS 26.5 simulator that breaks StoreKit testing.
+    <code>xcodebuild -version</code> passing without an accepted licence. The scripts themselves stay free,
+    MIT, on <a href="https://github.com/vskromny/appstore-release-kit">GitHub</a>, and so do the short
+    versions of several of these — the PDF is the long form, in one place.</p>
+    <a class="buy" id="buy-kit" href="#">Buy for CHF&nbsp;5</a>
   </div>
 
 </div>
@@ -136,8 +137,8 @@ environment. Run any command without arguments for usage. Full README on
     a.href = "mailto:v.skromny@gmail.com?subject=" + encodeURIComponent(subject);
     a.textContent = a.textContent.replace("Buy", "Email to buy");
   }
-  wire("buy-kit", BUY_KIT_URL, "appstore-release-kit: Kit + Playbook (CHF 20)");
-  wire("buy-review", BUY_REVIEW_URL, "appstore-release-kit: Rejection second opinion (CHF 10)");
+  wire("buy-kit", BUY_KIT_URL, "appstore-release-kit: Playbook (CHF 5)");
+  wire("buy-review", BUY_REVIEW_URL, "appstore-release-kit: Rejection second opinion (CHF 29)");
 </script>
 </body>
 </html>
