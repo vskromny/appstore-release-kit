@@ -6,13 +6,13 @@
 <title>appstore-release-kit — App Store Connect release scripts, API key only, zero dependencies</title>
 <meta name="description" content="Zero-dependency Node scripts for App Store Connect: wait for a build, attach it to a version and read it back, upload the subscription review screenshot, attach evidence to App Review. Plus a playbook of what Apple's docs do not say.">
 <script>
-  // Lemon Squeezy will not serve a checkout until the store passes its KYC/KYB review:
-  // until then both links below answer 404 and the store root answers 403. Flip STORE_LIVE
-  // to true once a checkout actually loads — verified by opening it, not by an HTTP status,
-  // because the dead link answers 302 before it answers 404.
+  // The playbook sells through Polar. Polar opens the checkout page before the organization
+  // finishes its account review, so a page that loads is not proof it takes money: flip
+  // STORE_LIVE only once the organization status reads active. The second opinion is a
+  // human service, which Polar does not sell, so it stays on email until it has its own link.
   const STORE_LIVE = false;
-  const BUY_KIT_URL = "https://appligent.lemonsqueezy.com/checkout/buy/dc62d1f9-7eac-458a-a713-f9152511cc5d";
-  const BUY_REVIEW_URL = "https://appligent.lemonsqueezy.com/checkout/buy/c3183e82-d841-4a5a-8b4c-6bdc532f9495";
+  const BUY_KIT_URL = "https://buy.polar.sh/polar_cl_VUP6z9hnxpC271CLNf4cvRnnQ38ApbKQgZTBi3AK5In";
+  const BUY_REVIEW_URL = "#";
 </script>
 <style>
   :root {
@@ -115,7 +115,7 @@ environment. Run any command without arguments for usage. Full README on
 
   <div class="offer">
     <h3>The playbook</h3>
-    <p class="price">CHF&nbsp;5</p>
+    <p class="price">$5</p>
     <p><em>What Apple didn't write</em> (PDF, 9 pages): sixteen things that cost real release days, each as
     symptom → cause → fix → how to verify it took. The version that silently kept the old build. The beta
     group that hides <code>VALID</code> builds. The subscription screenshot that "isn't in the API".
@@ -123,7 +123,7 @@ environment. Run any command without arguments for usage. Full README on
     <code>xcodebuild -version</code> passing without an accepted licence. The scripts themselves stay free,
     MIT, on <a href="https://github.com/vskromny/appstore-release-kit">GitHub</a>, and so do the short
     versions of several of these — the PDF is the long form, in one place.</p>
-    <a class="buy" id="buy-kit" href="#">Buy for CHF&nbsp;5</a>
+    <a class="buy" id="buy-kit" href="#">Buy for $5</a>
   </div>
 
 </div>
@@ -142,6 +142,10 @@ and a screenshot of the screen the reviewer named.</p>
 <p>You get a written answer within 24 hours, and follow-up questions on that answer are included. If I read
 your rejection and have nothing useful to add, I refund you and say so.</p>
 
+<h2 id="thanks">Bought the playbook?</h2>
+<p>The download is on the order page you just saw and in your receipt email. Nothing arrived? Check spam,
+then reply to the receipt and I will send the file directly.</p>
+
 <footer>
   <p>Appligent AI, Zürich · <a href="https://github.com/vskromny/appstore-release-kit">github.com/vskromny/appstore-release-kit</a> · MIT</p>
 </footer>
@@ -156,7 +160,7 @@ your rejection and have nothing useful to add, I refund you and say so.</p>
     a.href = "mailto:v.skromny@gmail.com?subject=" + encodeURIComponent(subject);
     a.textContent = a.textContent.replace("Buy", "Email to buy");
   }
-  wire("buy-kit", BUY_KIT_URL, "appstore-release-kit: Playbook (CHF 5)");
+  wire("buy-kit", BUY_KIT_URL, "appstore-release-kit: Playbook ($5)");
   wire("buy-review", BUY_REVIEW_URL, "appstore-release-kit: Rejection second opinion (CHF 29)");
 </script>
 </body>
