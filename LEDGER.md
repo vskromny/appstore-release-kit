@@ -115,3 +115,16 @@
 - 23.09 20:09 — ответ в тред LS **отправлен** Владимиром: msg `1a0cf762b376e7f0`, `SENT`,
   третье сообщение в треде `1a0c0668533abfc0`. Проверено по Gmail, не со слов.
   Ответа от LS ждём; Polar заводим параллельно, а не после.
+
+## 2026-09-23 вечер — два шлюза вместо одного
+
+- **Polar** (PDF): org `appligent-ai`, продукт `281d641a…` за **$5** (валюта орг. по умолчанию USD),
+  файл `dab4c50d…` 399 797 байт привязан как downloadable, чекаут
+  `buy.polar.sh/polar_cl_VUP6z9…` открывается. Org status `created`, details не отправлены —
+  продавать ещё нельзя, KIT_LIVE=false.
+- **Stripe** (разбор, CHF 29): Polar не продаёт услуги людей (их AUP), поэтому отдельно.
+  Аккаунт light4night: Payments и Payouts Active, задач нет. Restricted key (Products,
+  Prices, Payment Links — write; Checkout Sessions — read). Product `prod_VJZ6eO0xBZ91qH`,
+  link `buy.stripe.com/8x25kDejt04ZezpcHN6sw00`, live, редирект на `#what-to-send`.
+  REVIEW_LIVE=false до переименования аккаунта light4night → Appligent AI (имя в выписке).
+- Оба токена прошли через чат в открытом виде — перевыпустить после запуска.
