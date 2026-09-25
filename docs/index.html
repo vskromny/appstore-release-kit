@@ -123,11 +123,32 @@ environment. Run any command without arguments for usage. Full README on
     Resubmission after a rejection being web-only. The iOS 26.5 simulator that breaks StoreKit testing.
     <code>xcodebuild -version</code> passing without an accepted licence. The scripts themselves stay free,
     MIT, on <a href="https://github.com/vskromny/appstore-release-kit">GitHub</a>, and so do the short
-    versions of several of these — the PDF is the long form, in one place.</p>
+    versions of several of these — the PDF is the long form, in one place. <a href="#playbook-contents">All sixteen section titles</a>.</p>
     <a class="buy" id="buy-kit" href="#">Buy for $5</a>
   </div>
 
 </div>
+
+<h2 id="playbook-contents">What's in the $5 playbook</h2>
+<p>The sixteen sections, in order. Each one is symptom → cause → fix → how to verify it took.</p>
+<ol>
+  <li>The version silently keeps the old build</li>
+  <li>Upload ≠ distribute ≠ release</li>
+  <li>Export compliance unanswered — the build never installs, nobody is told</li>
+  <li>The subscription review screenshot IS in the API</li>
+  <li>One attachment per App Review — composite several captures into one image</li>
+  <li>Review notes are text only, 4,000 characters — put evidence in the attachment</li>
+  <li>Resubmission after a rejection is web-only</li>
+  <li>Decoding <code>reviewSubmissionItem</code> ids</li>
+  <li>StoreKit testing is broken on the iOS 26.5 simulator — use 26.2</li>
+  <li><code>xcodebuild -version</code> passes without an accepted licence</li>
+  <li>Guideline 3.1.2 — the checklist, and how to PROVE it</li>
+  <li>Subscription state must never fail open</li>
+  <li>Sign with an API key, never Xcode's account</li>
+  <li><code>GET /v1/builds/{id}/betaGroups</code> is a 403 — read membership from the group side</li>
+  <li>A marketing-version bump is a new train</li>
+  <li>Which mailbox ASC writes to — check before you wait for a rejection email</li>
+</ol>
 
 <h2 id="what-to-send">After you buy the second opinion</h2>
 <p>Reply to your receipt email with three things:</p>

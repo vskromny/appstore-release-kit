@@ -149,6 +149,30 @@ instead. And after a major Xcode upgrade, check `xcrun simctl list runtimes` —
 CoreSimulator can be older than the one the new Xcode needs, which kills simulator builds while
 device builds keep working.
 
+## What's in the $5 playbook
+
+The scripts stay free. For $5 there is a PDF, *What Apple didn't write*: sixteen things that cost
+real release days on two shipping apps, each as symptom → cause → fix → how to verify it took.
+Several have a short version above; the PDF is the long form. Buy it at
+https://vskromny.github.io/appstore-release-kit/. Its sections:
+
+1. The version silently keeps the old build
+2. Upload ≠ distribute ≠ release
+3. Export compliance unanswered — the build never installs, nobody is told
+4. The subscription review screenshot IS in the API
+5. One attachment per App Review — composite several captures into one image
+6. Review notes are text only, 4,000 characters — put evidence in the attachment
+7. Resubmission after a rejection is web-only
+8. Decoding `reviewSubmissionItem` ids
+9. StoreKit testing is broken on the iOS 26.5 simulator — use 26.2
+10. `xcodebuild -version` passes without an accepted licence
+11. Guideline 3.1.2 — the checklist, and how to PROVE it
+12. Subscription state must never fail open
+13. Sign with an API key, never Xcode's account
+14. `GET /v1/builds/{id}/betaGroups` is a 403 — read membership from the group side
+15. A marketing-version bump is a new train
+16. Which mailbox ASC writes to — check before you wait for a rejection email
+
 ## License
 
 MIT.
