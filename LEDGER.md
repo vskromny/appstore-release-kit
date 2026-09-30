@@ -145,3 +145,15 @@
 - Заказы: Polar **0 orders**, 9 checkout-сессий, все `expired`; Stripe **0** charges / payment_intents / checkout sessions — MEASURED (API). **0 $ INVOICED.**
 - Вывод: 11 писем за 3 дня не дали ни одного просмотра репо, видимого в traffic (задержка данных — до 23.09, т.е. письма 25–26.09 ещё не отражены). Судить в следующее воскресенье (04.10).
 - На сегодня 15:00 CET готовы 5 новых адресатов (копии `.ceo/ark/emails/15…19`).
+
+## 2026-09-30 (вт, внеплановый контроль — воскресный 28.09 пропущен) — funnel MEASURED
+
+Все цифры проверены в живых системах 2026-09-30 ~16:4x CEST, не со слов.
+
+- **Деньги: 0 $ INVOICED.**
+  - Polar (продукт release-kit, org appligent-ai): **0 orders, $0**, 9 checkout-сессий — все `expired` (Polar API `/v1/orders` total_count=0, `/v1/checkouts`).
+  - Stripe (acct `acct_1HpJDW…FruhD77ztT` «Appligent AI»): **0 charges, 0 checkout sessions** (Stripe API `/v1/charges`, `/v1/checkout/sessions`).
+- **Письма: 23 отправлено** (25–29.09; `.ceo/ark/outreach-log.md`), 1 DRAFT (Vishal, фильтр). Новых с 27.09 не слал (по решению CEO 30.09 release-kit сегодня 0).
+- **Ответы: 0** от всех 23 адресатов, 0 bounce — MEASURED, Gmail `in:anywhere newer_than:6d from:(…23 адреса…)` = пусто, 30.09.
+- **GitHub traffic (14 дней, traffic API):** **8 просмотров / 8 уникальных** (было 1/1 на 27.09 — первый видимый рост после писем 25–28.09), **296 клонов / 119 уникальных**, 0 звёзд, 0 форков, referrer: Google 1/1. Клоны без роста просмотров страницы = почти наверняка боты/зеркала, не покупатели.
+- **Вывод:** 23 письма за 5 дней → 0 ответов, 0 продаж, +7 просмотров репо. Дедлайн 10 $ INVOICED — 18.10 (18 дней). Гейт: если к 02.10 по #2 и к 04.10 по release-kit нет содержательных ответов — переписать оффер/тему один раз, затем судить о kill.
